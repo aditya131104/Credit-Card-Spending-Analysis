@@ -3,14 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
+# -------------------------------
 # PAGE CONFIG
+# -------------------------------
 st.set_page_config(page_title="Credit Card Dashboard", layout="wide")
 
 st.title("💳 Credit Card Spending Behavior Dashboard")
 
-
+# -------------------------------
 # LOAD DATA
+# -------------------------------
 @st.cache_data
 def load_data():
     df = pd.read_csv("credit_card_transactions.csv")
@@ -27,8 +29,9 @@ def load_data():
 
 df = load_data()
 
-
+# -------------------------------
 # SIDEBAR FILTER
+# -------------------------------
 st.sidebar.header("Filters")
 
 category_filter = st.sidebar.selectbox(
@@ -39,13 +42,15 @@ category_filter = st.sidebar.selectbox(
 if category_filter != "All":
     df = df[df['category'] == category_filter]
 
-
+# -------------------------------
 # DATA PREVIEW
+# -------------------------------
 st.subheader("📄 Dataset Preview")
 st.dataframe(df.head())
 
-
+# -------------------------------
 # CATEGORY SPENDING
+# -------------------------------
 st.subheader("🛒 Category-wise Spending")
 
 category_spend = df.groupby('category')['amt'].sum().sort_values(ascending=False)
@@ -56,8 +61,9 @@ plt.xticks(rotation=90)
 
 st.pyplot(fig1)
 
-
+# -------------------------------
 # MONTHLY TREND
+# -------------------------------
 st.subheader("📈 Monthly Spending Trend")
 
 monthly_spend = df.groupby('month')['amt'].sum()
@@ -67,8 +73,9 @@ monthly_spend.plot(kind='line', marker='o', ax=ax2)
 
 st.pyplot(fig2)
 
-
+# -------------------------------
 # AGE GROUP ANALYSIS
+# -------------------------------
 st.subheader("👥 Spending by Age Group")
 
 age_spend = df.groupby('age_group')['amt'].sum()
@@ -78,8 +85,9 @@ age_spend.plot(kind='bar', ax=ax3)
 
 st.pyplot(fig3)
 
-
+# -------------------------------
 # CUSTOMER SEGMENTATION
+# -------------------------------
 st.subheader("👑 Customer Segmentation")
 
 customer_data = df.groupby('cc_num')['amt'].agg(['sum','mean','count'])
@@ -91,8 +99,9 @@ customer_data['segment'] = pd.qcut(customer_data['total_spend'],
 
 st.dataframe(customer_data.head())
 
-
+# -------------------------------
 # HEATMAP
+# -------------------------------
 st.subheader("🔥 Heatmap (Month vs Category)")
 
 pivot = df.pivot_table(values='amt', index='month', columns='category', aggfunc='sum')
@@ -102,8 +111,9 @@ sns.heatmap(pivot, ax=ax4)
 
 st.pyplot(fig4)
 
-
+# -------------------------------
 # INSIGHTS
+# -------------------------------
 st.subheader("📌 Key Insights")
 
 st.markdown("""

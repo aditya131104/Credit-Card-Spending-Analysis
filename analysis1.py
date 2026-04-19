@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
-#  LOAD DATA
+# -------------------------------
+# 1. LOAD DATA
+# -------------------------------
 df = pd.read_csv("credit_card_transactions.csv")
 
 print("Dataset Loaded Successfully!")
@@ -12,7 +13,9 @@ print("Shape:", df.shape)
 print(df.head())
 
 
-#  DATA CLEANING
+# -------------------------------
+# 2. DATA CLEANING
+# -------------------------------
 df.drop_duplicates(inplace=True)
 
 df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
@@ -20,8 +23,9 @@ df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
 print("\nMissing Values:\n", df.isnull().sum())
 
 
-#  FEATURE ENGINEERING
-
+# -------------------------------
+# 3. FEATURE ENGINEERING
+# -------------------------------
 df['year'] = df['trans_date_trans_time'].dt.year
 df['month'] = df['trans_date_trans_time'].dt.month
 df['day'] = df['trans_date_trans_time'].dt.day
@@ -35,7 +39,9 @@ df['age_group'] = pd.cut(df['age'],
                         labels=['18-30','30-45','45-60','60+'])
 
 
-#  ANALYSIS
+# -------------------------------
+# 4. ANALYSIS
+# -------------------------------
 
 # Age group spending
 age_spend = df.groupby('age_group')['amt'].sum()
@@ -50,7 +56,9 @@ monthly_spend = df.groupby('month')['amt'].sum()
 print("\nMonthly Spending:\n", monthly_spend)
 
 
-#  CUSTOMER SEGMENTATION
+# -------------------------------
+# 5. CUSTOMER SEGMENTATION
+# -------------------------------
 customer_data = df.groupby('cc_num')['amt'].agg(['sum','mean','count'])
 customer_data.columns = ['total_spend','avg_spend','frequency']
 
@@ -61,7 +69,9 @@ customer_data['segment'] = pd.qcut(customer_data['total_spend'],
 print("\nCustomer Segments:\n", customer_data.head())
 
 
-#  VISUALIZATION
+# -------------------------------
+# 6. VISUALIZATION
+# -------------------------------
 
 # Age group graph
 age_spend.plot(kind='bar', title="Spending by Age Group")
@@ -87,14 +97,16 @@ plt.savefig("heatmap.png")
 plt.close()
 
 
-# SAVE OUTPUT
-
+# -------------------------------
+# 7. SAVE OUTPUT
+# -------------------------------
 customer_data.to_csv("customer_segments.csv")
 df.to_csv("processed_data.csv", index=False)
 
 
-# INSIGHTS
-
+# -------------------------------
+# 8. INSIGHTS
+# -------------------------------
 print("\nINSIGHTS:")
 print("1. Some categories generate highest revenue.")
 print("2. High-value customers contribute most spending.")
